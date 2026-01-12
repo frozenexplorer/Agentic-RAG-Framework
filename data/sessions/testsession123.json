@@ -1,0 +1,13 @@
+{
+  "session_id": "testsession123",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the remote work policy?"
+    },
+    {
+      "role": "assistant",
+      "content": "Based on the documents reviewed, here is Contoso's remote work policy:\n\n- Remote work is permitted up to **3 days per week** with manager approval.\n- Employees must be available online between **10:00–17:00 local time** on remote days.\n- Work from outside the country requires HR approval."
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "session_id": "fa0940483426",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi how are you whats up"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! I'm just a program. My purpose is to assist with any questions you have regarding our company's internal policies. How can I assist you today?"
+    },
+    {
+      "role": "user",
+      "content": "what are the different policies you have"
+    },
+    {
+      "role": "assistant",
+      "content": "I can provide information on various policies by searching through our internal documents using specific queries. Could you please specify which types of policies you're interested in, such as leave, reimbursements, remote work, security, HR, etc.? This will help me locate the relevant information for you.\n\nIf you don't have a specific policy in mind, we can start with general questions or you can choose one area from the following options:\n\n1. Leave and vacation policies\n2. Reimbursement policies\n3. Remote work policies\n4. Security policies\n5. HR-related policies\n\nLet me know how you'd like to proceed!"
+    },
+    {
+      "role": "user",
+      "content": "vacation"
+    },
+    {
+      "role": "assistant",
+      "content": "## Answer\nAccording to our internal policies, employees accrue 1.5 days of paid leave per month. Unused leave can be carried forward up to a maximum of 18 days at year end. For sick leave, employees are entitled to up to 10 days per year, which requires a medical certificate if the absence is more than two consecutive days.\n\n## Sources\n- sample_policy.md — chunk_0 (score: 0.6798)\n- 2.pdf — chunk_1 (score: 0.5368)\n\n## Notes\nThe sources provided contain the relevant information regarding vacation and sick leave policies. There were no specific mentions of other types of leaves or related policies in the documents searched."
+    }
+  ]
+}

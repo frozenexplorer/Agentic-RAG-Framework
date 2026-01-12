@@ -1,0 +1,21 @@
+{
+  "session_id": "74f87242e6b2",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! How can I assist you with the company's internal policy documents today?"
+    },
+    {
+      "role": "user",
+      "content": "how is the companys review policy"
+    },
+    {
+      "role": "assistant",
+      "content": "## Answer\nThe company's review policy is outlined in the Performance Appraisal Policy. Here are some key points:\n\n- **Purpose**: The performance appraisal gives individual employees and their manager an opportunity to review performance, work content, loads and volume, looking back on what has been achieved during the past year then agreeing future objectives.\n  \n- **Objectives**: \n  - To be a positive process.\n  - To raise the quality of services provided by motivating.\n  - To increase job satisfaction.\n  - To identify appropriate training and development requirements.\n\nEMA recognizes that employees perform most effectively when they have clear expectations of their job role, targets or objectives, and the wider aims of EMA. The policy aims to ensure that:\n  - Employees know what is expected of them in terms of performance standards and how to do their jobs.\n  - Feedback is provided to improve and develop performance and recognize achievements.\n  - Areas where improvement is required are identified along with training and development needs.\n  - A mutually agreed plan is set for achieving both development goals and employee career development.\n\nEMA holds an appraisal meeting and review each year, ensuring appropriate training and development is available for managers and employees. The policy applies to all EMA employees but may be amended based on the role's requirements.\n\n## Sources\n- **4.pdf** — *chunk_0* (score: 0.6029)\n- **sample_policy.md** — Not directly related, as it does not mention a review policy but includes other HR policies.\n\n## Notes\nThe provided documents do not explicitly specify the frequency of reviews or the specific steps involved in the appraisal process."
+    }
+  ]
+}
