@@ -1,25 +1,54 @@
-# Agentic RAG Framework (Starter)
+# 🤖 Agentic RAG Framework
 
-This is a minimal, **agentic RAG** implementation that:
+> **A minimal, extensible framework for building Agentic RAG applications.**
 
-- Accepts a user query
-- Lets the LLM decide whether it can answer directly **or** should call a tool
-- Implements a `search_docs` tool that retrieves from internal policy docs (vector search)
-- Maintains **session-based memory** (conversation history persisted to disk)
-- Works with **OpenAI API** or **Azure OpenAI (v1 endpoint)** using the same OpenAI Python SDK
-
----
-
-## 0) Prerequisites
-
-- Python **3.9+** (recommended 3.10+)
-- An OpenAI API key **or** an Azure OpenAI resource + deployed models
+This project acts as a starter kit for building intelligent agents that can:
+- **Retrieve Information**: Use Vector Search (RAG) to find relevant documents.
+- **Make Decisions**: Decide when to answer directly and when to search.
+- **Maintain Context**: Remember conversation history across sessions.
+- **Scale**: Support both **OpenAI** and **Azure OpenAI** providers.
 
 ---
 
-## 1) Setup
+## ✨ Features
 
-### Windows (PowerShell)
+- **Tool Use**: The LLM intelligently calls the `search_docs` tool only when necessary.
+- **Vector Search**: Includes a simple indexing pipeline for your local documents.
+- **Session Memory**: Persists chat history to disk for continuity.
+- **Dual Provider Support**: Seamlessly switch between OpenAI and Azure OpenAI.
+- **API Ready**: Includes a FastAPI server for deployment.
+
+---
+
+## 📂 Project Structure
+
+```text
+src/
+├── agentic_rag/
+│   ├── chat.py         # CLI Chat Interface
+│   ├── api.py          # FastAPI Server
+│   ├── index.py        # Indexing Script
+│   ├── agent.py        # Core Logic
+│   └── ...
+data/
+├── docs/               # Place your policy documents here
+└── index/              # Generated embeddings and index files
+```
+
+---
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
+
+- **Python 3.9+** installed.
+- An API Key for **OpenAI** OR **Azure OpenAI**.
+
+### 2. Installation
+
+Clone the repository and set up the environment:
+
+**Windows (PowerShell)**
 ```powershell
 cd Agentic-RAG-framework
 py -m venv .venv
@@ -28,7 +57,7 @@ pip install -r requirements.txt
 copy .env.example .env
 ```
 
-### Mac/Linux (bash/zsh)
+**Mac/Linux**
 ```bash
 cd Agentic-RAG-framework
 python3 -m venv .venv
@@ -37,60 +66,58 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Fill in `.env` with either `OPENAI_API_KEY` or `AZURE_OPENAI_*` values.
+### 3. Configuration
+
+Open `.env` and configure your credentials:
+
+- **OpenAI**: Set `OPENAI_API_KEY`.
+- **Azure**: Set `AZURE_OPENAI_API_KEY`, `AZURE_OPENAI_ENDPOINT`, etc.
+- **Models**: Configure `CHAT_MODEL` and `EMBEDDING_MODEL` (deployment names for Azure).
 
 ---
 
-## 2) Add your documents
+## 💡 Usage
 
-Put company policy docs in `data/docs/` (txt, md, pdf).
+### Step 1: Add Documents
+Place your text files (`.txt`, `.md`, `.pdf`) in the `data/docs/` directory.
+> *A sample `data/docs/sample_policy.md` is included for testing.*
 
-A sample policy doc is already included:
-- `data/docs/sample_policy.md`
-
----
-
-## 3) Build the index (embeddings)
+### Step 2: Build Index
+Generate embeddings for your documents:
 
 ```bash
 python -m agentic_rag.index
 ```
 
-This creates:
-- `data/index/embeddings.npy`
-- `data/index/meta.jsonl`
-- `data/index/manifest.json`
-
----
-
-## 4) Run the chat agent (CLI)
+### Step 3: Run Chat Agent
+Start the interactive CLI to chat with your agent:
 
 ```bash
 python -m agentic_rag.chat
 ```
+_Resume a previous session with `--session SESSION_ID`_
 
-You’ll get an interactive prompt. The agent will call `search_docs` **only when needed**.
-
-To resume a previous session:
-```bash
-python -m agentic_rag.chat --session SESSION_ID
-```
-
----
-
-## 5) Run as an API (optional)
+### Step 4: Run as API (Optional)
+Start the FastAPI server:
 
 ```bash
 uvicorn agentic_rag.api:app --reload
 ```
 
-Then POST:
-- `POST http://127.0.0.1:8000/chat`
-- body: `{"session_id": "optional", "message": "your question"}`
+**Test with CURL:**
+```bash
+curl -X POST "http://127.0.0.1:8000/chat" \
+     -H "Content-Type: application/json" \
+     -d '{"message": "What is the vacation policy?"}'
+```
 
 ---
 
-## Notes
+## 🛠️ Customization
 
-- Azure OpenAI requires **deployment names** for `CHAT_MODEL` and `EMBEDDING_MODEL` (set these in `.env`).
-- This starter uses a simple **numpy cosine similarity** vector store (no external DB).
+- **Embedding Model**: Supports `text-embedding-3-small` by default. Change in `config.py`.
+- **Vector Store**: Uses `numpy` for simplicity. Can be swapped for Qdrant/Chroma/etc. in `index_store.py`.
+
+---
+
+**Happy Hacking!** 🚀

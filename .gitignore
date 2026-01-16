@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+venv/
+ENV/
+
+# VS Code
+.vscode/
+
+# Agentic RAG Framework Data
+data/index/*
+!data/index/.gitkeep
+
+# Logs
+*.log
