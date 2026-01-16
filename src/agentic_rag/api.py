@@ -32,7 +32,7 @@ def _startup():
 
 
 @app.post("/ask", response_model=AskResponse)
-def ask(req: AskRequest):
+async def ask(req: AskRequest):
     s = app.state.settings
     agent: PolicyAgent = app.state.agent
 
@@ -40,11 +40,11 @@ def ask(req: AskRequest):
     if req.session_id:
         mem = SessionMemory.load(s.sessions_dir, req.session_id)
         mem.add({"role": "user", "content": req.query})
-        payload = agent.reply_with_sources(mem.messages)
+        payload = await agent.reply_with_sources(mem.messages)
         mem.add({"role": "assistant", "content": payload["answer"]})
         mem.save()
     else:
         # Stateless call
-        payload = agent.reply_with_sources([{"role": "user", "content": req.query}])
+        payload = await agent.reply_with_sources([{"role": "user", "content": req.query}])
 
     return AskResponse(answer=payload["answer"], source=payload["sources"])

@@ -8,7 +8,12 @@ from .index_store import IndexStore
 from .memory import SessionMemory
 from .agent import PolicyAgent
 
+import asyncio
+
 def main():
+    asyncio.run(async_main())
+
+async def async_main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--session", type=str, default=None, help="Resume an existing session id")
     args = parser.parse_args()
@@ -24,12 +29,13 @@ def main():
     console.print("Type 'exit' to quit.\n")
 
     while True:
+        # Prompt.ask is blocking, which is fine for a CLI
         user = Prompt.ask("[bold cyan]You[/bold cyan]")
         if user.strip().lower() in {"exit", "quit"}:
             break
 
         mem.add({"role": "user", "content": user})
-        answer = agent.reply(mem.messages)
+        answer = await agent.reply(mem.messages)
         mem.add({"role": "assistant", "content": answer})
         mem.save()
 

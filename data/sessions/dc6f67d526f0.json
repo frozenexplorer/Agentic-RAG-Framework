@@ -1,0 +1,29 @@
+{
+  "session_id": "dc6f67d526f0",
+  "messages": [
+    {
+      "role": "user",
+      "content": "hi"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! How can I assist you with information regarding our company's policies today?"
+    },
+    {
+      "role": "user",
+      "content": "what are you doing and why are you"
+    },
+    {
+      "role": "assistant",
+      "content": "I'm here to assist you by providing information based on our company's internal policy documents. My actions are focused on helping you understand the rules, benefits, leave policies, expenses, security guidelines, HR procedures, or any other topic related to company policies that you might inquire about.\n\nIf you have a specific question, feel free to ask, and I'll do my best to provide an accurate answer based on our documents."
+    },
+    {
+      "role": "user",
+      "content": "tell me about the companys posh policy."
+    },
+    {
+      "role": "assistant",
+      "content": "Based on the information from our documents, I can provide details about the company's policy regarding Prevention of Sexual Harassment (POSH), but there is no specific \"POSHPolicy\" document available. Here are some relevant excerpts:\n\n1. **Purpose**: The primary purpose is to create and maintain a safe work environment that is free from sexual harassment and discrimination, aligning with the guidelines provided in the “The Sexual Harassment of Women at Workplace (Prevention, Prohibition & Redressal) Act, 2013.”\n\n2. **Scope**: This policy applies to all employees within BBIL SYSTEMS, including those who work for or on behalf of the organization under various contractual arrangements.\n\n3. **Definition of Sexual Harassment**: It includes unwelcome sexually determined behavior that exploits an individual's sexuality in a manner that prevents them from fully utilizing benefits provided by the organization.\n\n4. **Policy Guidelines**: The policy outlines that sexual harassment includes physical contact and sexual advances, demands for sexual favors, sexually colored remarks, showing pornography, etc.\n\nIf you are referring to another POSH-related policy or have further questions about this topic, please let me know!"
+    }
+  ]
+}

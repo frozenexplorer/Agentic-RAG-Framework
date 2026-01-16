@@ -5,7 +5,7 @@ import json
 from typing import Any, Dict, List
 
 from .config import get_settings
-from .llm_client import get_client
+from .llm_client import get_async_client
 from .index_store import IndexStore
 from .tools import TOOLS, run_tool
 
@@ -60,27 +60,29 @@ def _extract_sources_from_tool_json(tool_content: str) -> List[str]:
 class PolicyAgent:
     def __init__(self, index: IndexStore):
         self.s = get_settings()
-        self.client = get_client()
+        self.client = get_async_client()
         self.index = index
 
-    def reply(self, messages: List[Dict[str, Any]]) -> str:
+    async def reply(self, messages: List[Dict[str, Any]]) -> str:
         """Backward-compatible: return only the answer string (CLI uses this)."""
-        payload = self.reply_with_sources(messages)
+        payload = await self.reply_with_sources(messages)
         return payload["answer"]
 
-    def reply_with_sources(self, messages: List[Dict[str, Any]]) -> Dict[str, Any]:
+    async def reply_with_sources(self, messages: List[Dict[str, Any]]) -> Dict[str, Any]:
         """
         Returns:
           {"answer": "...", "sources": ["doc1", "doc2", ...]}
         """
-        msgs: List[Dict[str, Any]] = [{"role": "system", "content": SYSTEM_PROMPT}] + messages
+        # Limit to last 10 messages for latency optimization
+        recent_messages = messages[-10:] if len(messages) > 10 else messages
+        msgs: List[Dict[str, Any]] = [{"role": "system", "content": SYSTEM_PROMPT}] + recent_messages
 
         sources_ordered: List[str] = []
         sources_seen = set()
 
         # Agent loop: allow up to 2 tool turns
         for _ in range(2):
-            resp = self.client.chat.completions.create(
+            resp = await self.client.chat.completions.create(
                 model=self.s.chat_model,
                 messages=msgs,
                 tools=TOOLS,
@@ -99,7 +101,7 @@ class PolicyAgent:
                 )
 
                 for tc in msg.tool_calls:
-                    tool_output = run_tool(self.index, tc.function.name, tc.function.arguments)
+                    tool_output = await run_tool(self.index, tc.function.name, tc.function.arguments)
 
                     # collect sources from this tool output
                     for doc_id in _extract_sources_from_tool_json(tool_output):

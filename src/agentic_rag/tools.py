@@ -3,7 +3,7 @@ import json
 from typing import Any, Dict, List
 import numpy as np
 
-from .llm_client import get_client
+from .llm_client import get_async_client
 from .config import get_settings
 from .index_store import IndexStore
 
@@ -26,11 +26,11 @@ TOOLS: List[Dict[str, Any]] = [
     }
 ]
 
-def search_docs(index: IndexStore, query: str, top_k: int = 5) -> Dict[str, Any]:
+async def search_docs(index: IndexStore, query: str, top_k: int = 5) -> Dict[str, Any]:
     s = get_settings()
-    client = get_client()
+    client = get_async_client()
 
-    resp = client.embeddings.create(model=s.embedding_model, input=[query])
+    resp = await client.embeddings.create(model=s.embedding_model, input=[query])
     qvec = np.array(resp.data[0].embedding, dtype=np.float32)
 
     results = index.search(qvec, top_k=top_k)
@@ -51,7 +51,7 @@ def search_docs(index: IndexStore, query: str, top_k: int = 5) -> Dict[str, Any]
         "notes": "Use results as citations. If results are irrelevant, say you could not find it in the provided docs.",
     }
 
-def run_tool(index: IndexStore, name: str, arguments_json: str) -> str:
+async def run_tool(index: IndexStore, name: str, arguments_json: str) -> str:
     """Execute a tool by name and return JSON string for the model."""
     try:
         args = json.loads(arguments_json or "{}")
@@ -64,6 +64,6 @@ def run_tool(index: IndexStore, name: str, arguments_json: str) -> str:
         top_k = max(1, min(top_k, 8))
         if not query:
             return json.dumps({"error": "query is required"}, ensure_ascii=False)
-        return json.dumps(search_docs(index, query=query, top_k=top_k), ensure_ascii=False)
+        return json.dumps(await search_docs(index, query=query, top_k=top_k), ensure_ascii=False)
 
     return json.dumps({"error": f"Unknown tool: {name}"}, ensure_ascii=False)

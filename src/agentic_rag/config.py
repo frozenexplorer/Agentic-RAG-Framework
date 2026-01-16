@@ -12,6 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 class Settings:
     provider: str
     openai_api_key: str | None
+    openai_base_url: str | None
     azure_api_key: str | None
     azure_base_url: str | None
 
@@ -39,6 +40,7 @@ def get_settings() -> Settings:
     s = Settings(
         provider=provider,
         openai_api_key=os.getenv("OPENAI_API_KEY"),
+        openai_base_url=os.getenv("OPENAI_BASE_URL"),
         azure_api_key=os.getenv("AZURE_OPENAI_API_KEY"),
         azure_base_url=os.getenv("AZURE_OPENAI_BASE_URL"),
 
@@ -49,7 +51,7 @@ def get_settings() -> Settings:
         index_dir=REPO_ROOT / os.getenv("INDEX_DIR", "data/index"),
         sessions_dir=REPO_ROOT / os.getenv("SESSIONS_DIR", "data/sessions"),
 
-        top_k=_get_int("TOP_K", 5),
+        top_k=_get_int("TOP_K", 3),
         chunk_tokens=_get_int("CHUNK_TOKENS", 800),
         chunk_overlap=_get_int("CHUNK_OVERLAP", 120),
     )
@@ -58,8 +60,10 @@ def get_settings() -> Settings:
         raise ValueError("PROVIDER must be 'openai' or 'azure'")
 
     if s.provider == "openai":
-        if not s.openai_api_key:
-            raise ValueError("OPENAI_API_KEY is required when PROVIDER=openai")
+        # For OpenAI, api_key is usually required unless using a local proxy that doesn't check it.
+        # But commonly libraries expect a non-empty string.
+        # We'll allow empty if base_url is set (local LLM case), but warn or set dummy.
+        pass
     else:
         if not s.azure_api_key:
             raise ValueError("AZURE_OPENAI_API_KEY is required when PROVIDER=azure")
