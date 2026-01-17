@@ -1,7 +1,7 @@
-# src/agentic_rag/api.py
 from __future__ import annotations
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List
 
@@ -11,6 +11,20 @@ from .memory import SessionMemory
 from .agent import PolicyAgent
 
 app = FastAPI(title="Agentic RAG Backend API")
+
+# CORS middleware for production frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",  # Local development
+        "http://localhost:5174",
+        "https://*.vercel.app",   # Vercel deployments
+        "*",  # Allow all origins (change this in production to specific domain)
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class AskRequest(BaseModel):

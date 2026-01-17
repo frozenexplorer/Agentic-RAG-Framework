@@ -72,8 +72,11 @@ export default function ChatInterface() {
         setIsLoading(true);
 
         try {
-            // Call API (using proxy)
-            const response = await fetch('/ask', {
+            // Use environment variable for API URL in production
+            const API_URL = import.meta.env.VITE_API_URL || '';
+
+            // Call API (using proxy in dev, direct URL in production)
+            const response = await fetch(`${API_URL}/ask`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
