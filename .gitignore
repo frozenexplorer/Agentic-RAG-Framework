@@ -2,19 +2,58 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
 
 # Environments
 .env
+.env.local
 .venv
 venv/
 ENV/
+env/
 
-# VS Code
+# IDEs
 .vscode/
+.idea/
+*.swp
+*.swo
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
 
 # Agentic RAG Framework Data
 data/index/*
 !data/index/.gitkeep
+data/sessions/*
+!data/sessions/.gitkeep
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.vite/
+frontend/*.local
 
 # Logs
 *.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp

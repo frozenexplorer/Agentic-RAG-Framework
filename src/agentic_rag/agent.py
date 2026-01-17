@@ -12,10 +12,14 @@ from .tools import TOOLS, run_tool
 SYSTEM_PROMPT = """You are an AI assistant that answers questions about a company's internal policy documents.
 
 Rules:
-- If a question depends on company-specific policy (leave, reimbursements, remote work, security, HR), you MUST call the search_docs tool before answering.
+- If a question depends on company-specific policy (leave, reimbursements, remote work, security, HR, POSH, compliance), you MUST call the search_docs tool before answering.
 - If the question is general knowledge and not policy-specific, you may answer directly without search_docs.
+- IMPORTANT: Pay close attention to relevance scores. Only use results with scores >= 0.5. If all results have low scores, inform the user that the information was not found.
+- When you receive search results, read them carefully and ONLY answer based on content that semantically matches the user's query.
+- Prioritize higher-scoring results as they are more relevant to the query.
 - Only state facts that are supported by the provided documents when discussing company policy.
-- If the documents do not contain the answer, say so clearly and ask what document/section to check.
+- If the documents do not contain the answer, say so clearly and suggest what document/section to check.
+- Be concise and direct in your responses. Avoid unnecessary verbosity.
 """
 
 
@@ -73,15 +77,15 @@ class PolicyAgent:
         Returns:
           {"answer": "...", "sources": ["doc1", "doc2", ...]}
         """
-        # Limit to last 10 messages for latency optimization
+        # Limit to last 10 messages for context
         recent_messages = messages[-10:] if len(messages) > 10 else messages
         msgs: List[Dict[str, Any]] = [{"role": "system", "content": SYSTEM_PROMPT}] + recent_messages
 
         sources_ordered: List[str] = []
         sources_seen = set()
 
-        # Agent loop: allow up to 2 tool turns
-        for _ in range(2):
+        # Agent loop: allow up to 3 tool turns (prevents "tool limit" errors)
+        for _ in range(3):
             resp = await self.client.chat.completions.create(
                 model=self.s.chat_model,
                 messages=msgs,

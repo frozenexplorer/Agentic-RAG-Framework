@@ -1,0 +1,218 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-primary: #3b82f6;
+  --accent-secondary: #6366f1;
+  --accent-glow: rgba(59, 130, 246, 0.5);
+  --glass-bg: rgba(30, 41, 59, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  overflow: hidden;
+  /* App-like feel */
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 20%);
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Glassmorphism Utilities */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+}
+
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Typography & Markdown Defaults */
+.markdown h1,
+.markdown h2,
+.markdown h3 {
+  color: var(--text-primary);
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+
+.markdown p {
+  margin-bottom: 1em;
+}
+
+.markdown pre {
+  background: #00000040;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin-bottom: 1em;
+}
+
+.markdown code {
+  font-family: 'Fira Code', monospace;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+}
+
+.markdown ul,
+.markdown ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1em;
+}
+
+.markdown a {
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+
+.markdown a:hover {
+  text-decoration: underline;
+}
+
+/* Animation Keyframes */
+@keyframes typing-dot {
+
+  0%,
+  20% {
+    opacity: 0.3;
+    transform: translateY(0px);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+
+  100% {
+    opacity: 0.3;
+    transform: translateY(0px);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-4px);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.4);
+  }
+}
+
+/* Utility Animation Classes */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out;
+}
+
+.animate-shake {
+  animation: shake 0.5s;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
