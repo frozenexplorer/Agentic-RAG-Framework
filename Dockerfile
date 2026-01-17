@@ -1,33 +1,29 @@
-# Use Python 3.11 slim image for smaller size
-FROM python:3.11-slim
+# ---------- Frontend build ----------
+FROM node:20-alpine AS frontend
+WORKDIR /frontend
+COPY frontend/package*.json ./
+RUN npm ci
+COPY frontend/ .
+RUN npm run build
 
-# Set working directory
+# ---------- Backend runtime ----------
+FROM python:3.11-slim
 WORKDIR /app
 
-# Install system dependencies required for FAISS
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copy requirements first for better caching
 COPY requirements.txt .
-
-# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY src/ ./src/
-COPY pyproject.toml .
+# Copy backend + docs
+COPY backend/ /app/backend/
+COPY data/ /app/data/
 
-# Create data directories
-RUN mkdir -p data/docs data/index data/sessions
+# Copy built frontend
+COPY --from=frontend /frontend/dist /app/frontend/dist
 
-# Expose port
-EXPOSE 8000
-
-# Set environment variables
+# Make backend importable
+ENV PYTHONPATH=/app/backend
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
-# Run the FastAPI application
-CMD ["uvicorn", "agentic_rag.api:app", "--host", "0.0.0.0", "--port", "8000"]
+EXPOSE 8000
+CMD ["uvicorn", "--app-dir", "/app/backend", "agentic_rag.api:app", "--host", "0.0.0.0", "--port", "8000"]

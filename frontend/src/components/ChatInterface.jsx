@@ -14,12 +14,19 @@ export default function ChatInterface() {
     const [typingProgress, setTypingProgress] = useState(0);
     const [isTyping, setIsTyping] = useState(false);
     const [pendingSources, setPendingSources] = useState([]);
+
     const messagesEndRef = useRef(null);
     const typingTimerRef = useRef(null);
 
     useEffect(() => {
-        // Generate simple Session ID
-        const sid = 'sess_' + Math.random().toString(36).substr(2, 9);
+        // Persist Session ID across refreshes (better UX + memory continuity)
+        const existing = localStorage.getItem("rag_session_id");
+        if (existing) {
+            setSessionId(existing);
+            return;
+        }
+        const sid = 'sess_' + Math.random().toString(36).slice(2, 11);
+        localStorage.setItem("rag_session_id", sid);
         setSessionId(sid);
     }, []);
 
@@ -31,7 +38,7 @@ export default function ChatInterface() {
         scrollToBottom();
     }, [messages, isTyping]);
 
-    // Smooth typing animation effect - letter by letter
+    // Typing animation
     useEffect(() => {
         if (!isTyping || !typingMessage) {
             setTypingProgress(0);
@@ -39,44 +46,35 @@ export default function ChatInterface() {
         }
 
         if (typingProgress >= typingMessage.length) {
-            // Typing complete
             setIsTyping(false);
-            setMessages(prev => [...prev, {
-                role: 'assistant',
-                content: typingMessage,
-                sources: pendingSources
-            }]);
+            setMessages(prev => [
+                ...prev,
+                { role: 'assistant', content: typingMessage, sources: pendingSources }
+            ]);
             setTypingMessage('');
             setTypingProgress(0);
             setPendingSources([]);
             return;
         }
 
-        // Smooth character-by-character reveal (like ChatGPT/Gemini)
-        const typingSpeed = 3; // milliseconds per character (faster = smoother)
+        const typingSpeed = 3;
         typingTimerRef.current = setTimeout(() => {
             setTypingProgress(prev => prev + 1);
         }, typingSpeed);
 
         return () => {
-            if (typingTimerRef.current) {
-                clearTimeout(typingTimerRef.current);
-            }
+            if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
         };
     }, [isTyping, typingMessage, typingProgress, pendingSources]);
 
     const handleSend = async (text) => {
-        // Add User Message with fade-in animation
         const userMsg = { role: 'user', content: text };
         setMessages(prev => [...prev, userMsg]);
         setIsLoading(true);
 
         try {
-            // Use environment variable for API URL in production
-            const API_URL = import.meta.env.VITE_API_URL || '';
-
-            // Call API (using proxy in dev, direct URL in production)
-            const response = await fetch(`${API_URL}/ask`, {
+            // ✅ SAME-ORIGIN call (single URL deployment)
+            const response = await fetch("/ask", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -86,14 +84,14 @@ export default function ChatInterface() {
             });
 
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                const errText = await response.text().catch(() => "");
+                throw new Error(`Backend error ${response.status}: ${errText}`);
             }
 
             const data = await response.json();
 
-            // Start typing animation with sources
             setPendingSources(data.source || []);
-            setTypingMessage(data.answer);
+            setTypingMessage(data.answer || "");
             setTypingProgress(0);
             setIsTyping(true);
 
@@ -108,21 +106,18 @@ export default function ChatInterface() {
         }
     };
 
-    // Get the currently typing text to display
     const displayedTypingText = typingMessage.substring(0, typingProgress);
 
     return (
         <div className="flex flex-col h-screen bg-transparent">
             <Header />
 
-            {/* Messages Area */}
             <main className="flex-1 overflow-y-auto px-4 py-6 scroll-smooth">
                 <div className="max-w-4xl mx-auto space-y-6">
                     {messages.map((msg, idx) => (
                         <MessageBubble key={idx} message={msg} index={idx} />
                     ))}
 
-                    {/* Typing indicator with smooth letter-by-letter animation */}
                     {isTyping && typingMessage && (
                         <div className="flex w-full mb-6 justify-start animate-fade-in">
                             <div className="flex max-w-[80%] flex-row gap-3">
@@ -139,7 +134,6 @@ export default function ChatInterface() {
                                         </div>
                                     </div>
 
-                                    {/* Show sources if available during typing */}
                                     {pendingSources && pendingSources.length > 0 && (
                                         <div className="mt-2 ml-1 flex flex-col gap-1 w-full max-w-md animate-slide-up">
                                             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Sources</p>
@@ -162,7 +156,6 @@ export default function ChatInterface() {
                         </div>
                     )}
 
-                    {/* Loading indicator */}
                     {isLoading && !isTyping && (
                         <div className="flex items-center gap-3 animate-pulse">
                             <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center">
@@ -181,7 +174,6 @@ export default function ChatInterface() {
                 </div>
             </main>
 
-            {/* Input Area */}
             <div className="flex-none bg-gradient-to-t from-slate-950 via-slate-950 to-transparent pt-10">
                 <InputArea onSend={handleSend} disabled={isLoading || isTyping} />
             </div>

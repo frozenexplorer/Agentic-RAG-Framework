@@ -35,7 +35,7 @@ This framework provides everything you need to build sophisticated AI agents tha
 
 ```text
 Agentic-RAG-Framework/
-├── src/agentic_rag/        # Backend Python package
+├── backend/agentic_rag/    # Backend Python package
 │   ├── api.py              # FastAPI server
 │   ├── agent.py            # Core agent logic
 │   ├── tools.py            # Search tools with semantic filtering
@@ -236,7 +236,7 @@ This prevents irrelevant answers and improves accuracy.
 
 ### Add New Tools
 
-Edit `src/agentic_rag/tools.py`:
+Edit `backend/agentic_rag/tools.py`:
 ```python
 TOOLS = [
     {

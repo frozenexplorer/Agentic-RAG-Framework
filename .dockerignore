@@ -7,31 +7,21 @@ __pycache__/
 venv/
 ENV/
 
-# Data files - too large for Docker
-data/docs/*
-data/index/*
-data/sessions/*
-
-# Keep directory structure
-!data/docs/.gitkeep
-!data/index/.gitkeep
-!data/sessions/.gitkeep
-
-# Development files
+# Git / editor
 .git/
-.gitignore
 .vscode/
 .idea/
-*.md
-!README.md
 
-# Frontend (not needed in backend Docker)
-frontend/
+# Frontend build artifacts
+frontend/node_modules/
+frontend/dist/
 
-# Logs
+# Runtime-generated data
+data/index/
+data/sessions/
+
+# Logs / OS
 *.log
-
-# OS
 .DS_Store
 Thumbs.db
 *.tmp
