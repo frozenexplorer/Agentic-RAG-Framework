@@ -260,7 +260,7 @@ TOOLS = [
 
 In `frontend/src/components/ChatInterface.jsx`:
 ```javascript
-const typingSpeed = 10; // milliseconds per character
+const typingSpeed = 3; // milliseconds per character
 ```
 
 ---
@@ -293,21 +293,6 @@ server: {
   }
 }
 ```
-
----
-
-## 📊 Performance
-
-### Optimizations Applied
-- **Agent loop**: 3 iterations max (prevents timeout)
-- **Message history**: Last 10 messages (reduced context)
-- **Semantic filtering**: Score ≥ 0.5 (better accuracy)
-- **Reduced chunk size**: 600 tokens (faster embedding)
-
-### Expected Response Time
-- **Simple queries**: 1-2 seconds
-- **Complex queries**: 2-4 seconds
-- **LM Studio (local)**: 3-6 seconds (depends on hardware)
 
 ---
 
@@ -384,4 +369,3 @@ Contributions welcome! Please feel free to submit a Pull Request.
 
 ---
 
-**Built with ❤️ using modern AI and web technologies** 🚀
