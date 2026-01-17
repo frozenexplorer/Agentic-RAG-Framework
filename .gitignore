@@ -10,6 +10,7 @@ build/
 
 # Environments
 .env
+.env.*
 .env.local
 .venv
 venv/
